@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <script src="https://d3js.org/d3.v7.min.js"></script>
-<script src="https://github.com/susielu/d3-annotation/blob/18c85b076387b99dc9a196d5bd0b9073198fab39/d3-annotation.js"></script>
-<html>
-<body>
+<style> .chart rect { fill: steelblue } </style>
+
+<html><body>
 <h1>Hello World</h1>
-<p>Test I'm hosted with GitHub Pages.</p>
+<p>Here are the magic numbers from Lost: <span id = "data"></span></p> 
 
 <svg class = "chart" width="120" height="500"></svg>
+
 <script>
-    var data = [4,8,15,16,23,42];
-    document.getElementById("data").innerHTML = data;
+var data = [4,8,15,16,23,42];
+    document.getElementById("data").innerHTML= data;
     d3.select(".chart")
       .selectAll("rect")
       .data(data)
@@ -18,10 +19,9 @@
     .attr("x",function(d,i) { return 20*i; })
     .attr("height",20)
     .attr("y",400)
-    .transition()
+    .transition().duration(2000)
     .attr("height",function(d) { return 10*d; })
     .attr("y",function(d) { return 420-10*d; });
 </script>
 
-</body>
-</html>
+</body></html>
