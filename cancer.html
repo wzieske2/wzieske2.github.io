@@ -76,18 +76,16 @@ d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/cance
 
 
     // Add the line
-    svg.selectAll(".line")
-      .data(sumstat)
-      .join("path")
-        .attr("fill", "none")
-        .attr("stroke", function(d){ return color(d[0]) })
-        .attr("stroke-width", 1.5)
-        .attr("d", function(d){
-          return d3.line()
-            .x(function(d) { return x(d.year); })
-            .y(function(d) { return y(+d.n); })
-            (d[1])
-        })
+    line.append("path")
+      .datum(data)
+      .attr("class", "line")  // I add the class line to be able to modify this line later on.
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d) { return x(d.date) })
+        .y(function(d) { return y(d.lung) })
+        )
 
     // Add the brushing
     line
@@ -136,8 +134,8 @@ d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/cance
         .attr("d", d3.line()
           .x(function(d) { return x(d.date) })
           .y(function(d) { return y(d.lung) })
-      )
+          )
     });
-
+console.log(d.lung)
 })
 </script>
