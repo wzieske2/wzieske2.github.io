@@ -28,7 +28,7 @@ const svg = d3.select("#my_dataviz")
           `translate(${margin.left}, ${margin.top})`);
 
 //Read the data
-d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/cancer-death-rates-by-type.csv",
+d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/cancer-death-rates-by-type-world.csv",
   function(d){
     return { date : d3.timeParse("%Y")(d.Year), lung : d.lung }
   }).then(
