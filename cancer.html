@@ -29,12 +29,10 @@ const svg = d3.select("#my_dataviz")
 
 //Read the data
 d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/cancer-death-rates-by-type.csv",
+  function(d){
+    return { date : d3.timeParse("%Y")(d.Year), lung : d.lung }
+  }).then(
 
-data.forEach(function(d) {
-        d.date = d3.timeParse("%Y-%m-%d")(d.Year);
-        d.lung = d['Deaths - Tracheal, bronchus, and lung cancer - Sex: Both - Age: Age-standardized (Rate)'];
-    }))
-  .then(
 
   // Now I can use this dataset:
   function(data) {
