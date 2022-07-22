@@ -1,32 +1,32 @@
 ﻿cause,value
-Deaths - Meningitis - Sex: Both - Age: All Ages (Number),236222
-Deaths - Alzheimer's disease and other dementias - Sex: Both - Age: All Ages (Number),1623276
-Deaths - Parkinson's disease - Sex: Both - Age: All Ages (Number),362907
-Deaths - Nutritional deficiencies - Sex: Both - Age: All Ages (Number),251577
-Deaths - Malaria - Sex: Both - Age: All Ages (Number),643381
-Deaths - Drowning - Sex: Both - Age: All Ages (Number),237242
-Deaths - Interpersonal violence - Sex: Both - Age: All Ages (Number),415180
-Deaths - Maternal disorders - Sex: Both - Age: All Ages (Number),196471
-Deaths - HIV/AIDS - Sex: Both - Age: All Ages (Number),863837
-Deaths - Drug use disorders - Sex: Both - Age: All Ages (Number),128083
-Deaths - Tuberculosis - Sex: Both - Age: All Ages (Number),1179766
-Deaths - Cardiovascular diseases - Sex: Both - Age: All Ages (Number),18562510
-Deaths - Lower respiratory infections - Sex: Both - Age: All Ages (Number),2493200
-Deaths - Neonatal disorders - Sex: Both - Age: All Ages (Number),1882438
-Deaths - Alcohol use disorders - Sex: Both - Age: All Ages (Number),168015
-Deaths - Self-harm - Sex: Both - Age: All Ages (Number),759028
-Deaths - Exposure to forces of nature - Sex: Both - Age: All Ages (Number),6076
-Deaths - Diarrheal diseases - Sex: Both - Age: All Ages (Number),1534443
-Deaths - Environmental heat and cold exposure - Sex: Both - Age: All Ages (Number),47461
-Deaths - Neoplasms - Sex: Both - Age: All Ages (Number),10079637
-Deaths - Conflict and terrorism - Sex: Both - Age: All Ages (Number),62985
-Deaths - Diabetes mellitus - Sex: Both - Age: All Ages (Number),1551170
-Deaths - Chronic kidney disease - Sex: Both - Age: All Ages (Number),1427232
-Deaths - Poisonings - Sex: Both - Age: All Ages (Number),77162
-Deaths - Protein-energy malnutrition - Sex: Both - Age: All Ages (Number),212242
-Deaths - Road injuries - Sex: Both - Age: All Ages (Number),1198289
-Deaths - Chronic respiratory diseases - Sex: Both - Age: All Ages (Number),3974315
-Deaths - Cirrhosis and other chronic liver diseases - Sex: Both - Age: All Ages (Number),1472012
-Deaths - Digestive diseases - Sex: Both - Age: All Ages (Number),2557689
-"Deaths - Fire, heat, and hot substances - Sex: Both - Age: All Ages (Number)",111292
-Deaths - Acute hepatitis - Sex: Both - Age: All Ages (Number),79176
+Meningitis,236222
+Alzheimer's-Disease,1623276
+Parkinson's-Disease,362907
+Nutritional,251577
+Malaria,643381
+Drowning,237242
+Domestic-Violence,415180
+Maternal Disorders,196471
+HIV/AIDS,863837
+Drug Overdose,128083
+Tuberculosis,1179766
+Cardiovascular-Diseases,18562510
+Respiratory-Infection,2493200
+Neonatal,1882438
+Alcohol,168015
+Self-harm,759028
+Nature,6076
+Diarrheal,1534443
+Environmental,47461
+Neoplasms,10079637
+Armed-Conflict,62985
+Diabetes,1551170
+Kidney-Disease,1427232
+Poisonings,77162
+Malnutrition,212242
+Road-Injuries,1198289
+Respiratory-Diseases,3974315
+Liver-Diseases,1472012
+Digestive-Diseases,2557689
+Fire,111292
+Acute-Hepatitis,79176
