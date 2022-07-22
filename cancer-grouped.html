@@ -23,10 +23,10 @@
         .attr("transform", `translate(${margin.left},${margin.top})`);
     
     //Read the data
-    d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv").then( function(data) {
+    d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/cancer-death-rates-by-type.csv").then( function(data) {
     
       // group the data: I want to draw one line per group
-      const sumstat = d3.group(data, d => d.name); // nest function allows to group the calculation per level of a factor
+      const sumstat = d3.group(data, d => d.Entity); // nest function allows to group the calculation per level of a factor
     
       // Add X axis --> it is a date format
       const x = d3.scaleLinear()
@@ -38,7 +38,7 @@
     
       // Add Y axis
       const y = d3.scaleLinear()
-        .domain([0, d3.max(data, function(d) { return +d.n; })])
+        .domain([0, d3.max(data, function(d) { return +d.lung; })])
         .range([ height, 0 ]);
       svg.append("g")
         .call(d3.axisLeft(y));
@@ -57,7 +57,7 @@
             .attr("d", function(d){
               return d3.line()
                 .x(function(d) { return x(d.year); })
-                .y(function(d) { return y(+d.n); })
+                .y(function(d) { return y(+d.lung); })
                 (d[1])
             })
     
