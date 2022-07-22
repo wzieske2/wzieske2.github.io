@@ -23,7 +23,7 @@
         .attr("transform", `translate(${margin.left},${margin.top})`);
     
     // Parse the Data
-    d3.csv("https://github.com/wzieske2/wzieske2.github.io/blob/1c525fcf4f6df99ac661b45fdf4fcf701c88ec1e/2019-world-annual-number-of-deaths-by-cause.csv").then( function(data) {
+    d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/2019-world-annual-number-of-deaths-by-cause.csv").then( function(data) {
     
     // X axis
     const x = d3.scaleBand()
