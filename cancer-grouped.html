@@ -2,64 +2,172 @@
 <meta charset="utf-8">
 
 <!-- Load d3.js -->
-<script src="https://d3js.org/d3.v6.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
 
-<!-- Create a div where the graph will take place -->
-<div id="my_dataviz"></div>
 
-<script>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    
+    .nav {
+      overflow: hidden;
+      background-color: #13294B;
+    }
+    
+    .nav a {
+      float: left;
+      color: #f2f2f2;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      font-size: 17px;
+    }
+    
+    .nav a:hover {
+      background-color: #ddd;
+      color: black;
+    }
+    
+    .nav a.active {
+      background-color: #FF552E;
+      color: white;
+    }
+  
+  
+  .bar:hover {
+    fill: red;
+  }
+  
+  
+  .axis--x path {
+    display: none;
+  }
+  
+    </style>
+    </head>
+  <html><body>
+  <div id=nav class="nav">
+    <a href="index.html">Introduction</a>
+    <a href="death-type.html">Causes of Death</a>
+    <a class="active" href="cancer-grouped.html">Lung Cancer</a>
+    <a href="tobacco.html">Tobacco Use</a>
+    <a href="cancer.html">Lung Cancer</a>
+    <a href="summary.html">Summary</a>
+  </div>
+  <html><body>
+    <div id=toptext >
+        <h1>Smoking and Lung Cancer</h1>
+        <div id="viz"></div> 
+        
+        <script>
 
-    // set the dimensions and margins of the graph
-    const margin = {top: 10, right: 30, bottom: 30, left: 60},
-        width = 460 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
-    
-    // append the svg object to the body of the page
-    const svg = d3.select("#my_dataviz")
-      .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
-    
-    //Read the data
-    d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/cancer-death-rates-by-type.csv").then( function(data) {
-    
-      // group the data: I want to draw one line per group
-      const sumstat = d3.group(data, d => d.Entity); // nest function allows to group the calculation per level of a factor
-    
-      // Add X axis --> it is a date format
-      const x = d3.scaleLinear()
-        .domain(d3.extent(data, function(d) { return d.year; }))
-        .range([ 0, width ]);
-      svg.append("g")
-        .attr("transform", `translate(0, ${height})`)
-        .call(d3.axisBottom(x).ticks(5));
-    
-      // Add Y axis
-      const y = d3.scaleLinear()
-        .domain([0, d3.max(data, function(d) { return +d.lung; })])
-        .range([ height, 0 ]);
-      svg.append("g")
-        .call(d3.axisLeft(y));
-    
-      // color palette
-      const color = d3.scaleOrdinal()
-        .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
-    
-      // Draw the line
-      svg.selectAll(".line")
-          .data(sumstat)
-          .join("path")
-            .attr("fill", "none")
-            .attr("stroke", function(d){ return color(d[0]) })
-            .attr("stroke-width", 1.5)
-            .attr("d", function(d){
-              return d3.line()
-                .x(function(d) { return x(d.year); })
-                .y(function(d) { return y(+d.lung); })
-                (d[1])
-            })
-    
-    })
-    </script>
+        // set the dimensions and margins of the graph
+        const margin = {top: 10, right: 30, bottom: 20, left: 50},
+            width = 460 - margin.left - margin.right,
+            height = 400 - margin.top - margin.bottom;
+
+        // append the svg object to the body of the page
+        const svg = d3.select("#viz")
+        .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // Parse the Data
+        d3.csv("world-total-cancer-deaths-by-type.csv").then ( function(data) {
+
+        // List of subgroups = header of the csv files = soil condition here
+        const subgroups = data.columns.slice(1)
+
+        // List of groups = species here = value of the first column called group -> I show them on the X axis
+        const groups = data.map(d => d.group)
+
+        // Add X axis
+        const x = d3.scaleBand()
+            .domain(groups)
+            .range([0, width])
+            .padding([0.2])
+        svg.append("g")
+            .attr("transform", `translate(0, ${height})`)
+            .call(d3.axisBottom(x).tickSizeOuter(0));
+
+        // Add Y axis
+        const y = d3.scaleLinear()
+            .domain([0, 100])
+            .range([ height, 0 ]);
+        svg.append("g")
+            .call(d3.axisLeft(y));
+
+        // color palette = one color per subgroup
+        const color = d3.scaleOrdinal()
+            .domain(subgroups)
+            .range(['#e41a1c','#377eb8','#4daf4a'])
+
+        // Normalize the data -> sum of each group must be 100!
+        console.log(data)
+        dataNormalized = []
+        data.forEach(function(d){
+            // Compute the total
+            tot = 0
+            for (i in subgroups){ name=subgroups[i] ; tot += +d[name] }
+            // Now normalize
+            for (i in subgroups){ name=subgroups[i] ; d[name] = d[name] / tot * 100}
+        })
+
+        //stack the data? --> stack per subgroup
+        const stackedData = d3.stack()
+            .keys(subgroups)
+            (data)
+
+        // Show the bars
+        svg.append("g")
+            .selectAll("g")
+            // Enter in the stack data = loop key per key = group per group
+            .data(stackedData)
+            .join("g")
+            .attr("fill", d => color(d.key))
+            .selectAll("rect")
+            // enter a second time = loop subgroup per subgroup to add all rectangles
+            .data(d => d)
+            .join("rect")
+                .attr("x", d => x(d.data.group))
+                .attr("y", d => y(d[1]))
+                .attr("height", d => y(d[0]) - y(d[1]))
+                .attr("width",x.bandwidth())
+        });
+
+           
+        const annotations = [
+                {
+        
+        
+                  type: d3.annotationCalloutRect,
+                  note: {
+                    label: "Cancer was the second leading cause of death globally in 2019.",
+                    wrap: 180
+                  },          
+                
+                  x: 125,
+                  y: 485,
+                  dy: -137,
+                  dx: 300,
+                  subject: { width : 450, height : 20 }
+                }].map(function(d){ d.color = "red"; return d})
+        
+                const makeAnnotations = d3.annotation()
+                  .type(d3.annotationLabel)
+                  .annotations(annotations)
+        
+                d3.select("svg")
+                  .append("g")
+                  .attr("class", "annotation-group")
+                  .call(makeAnnotations)
+        
+        </script>
+        <div id=bottext><p style="margin:10px;padding:0">Next we will explore the prevalence of lung cancer. Please click the 'Lung Cancer' button at the top of the page to continue.</p></div> 

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  
+  .nav {
+    overflow: hidden;
+    background-color: #13294B;
+  }
+  
+  .nav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+  
+  .nav a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+  
+  .nav a.active {
+    background-color: #FF552E;
+    color: white;
+  }
+
+
+.bar:hover {
+  fill: red;
+}
+
+
+.axis--x path {
+  display: none;
+}
+
+  </style>
+  </head>
+<html><body>
+<div id=nav class="nav">
+  <a href="index.html">Introduction</a>
+  <a href="death-type.html">Causes of Death</a>
+  <a href="cancer-grouped.html">Lung Cancer</a>
+  <a href="tobacco.html">Tobacco Use</a>
+  <a href="cancer.html">Lung Cancer</a>
+  <a class="active" href="summary.html">Summary</a>
+</div>
