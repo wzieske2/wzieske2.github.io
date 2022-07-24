@@ -61,14 +61,15 @@
   </div>
   <html><body>
     <div id=toptext >
-        <h1>Smoking and Lung Cancer</h1>
+        <h1>Lung Cancer is the Leading Cause of Cancer Deaths Worldwide</h1>
+        <p style="margin:10px;padding:0">Affordance: Hover over a bar in the stacked bar graph below to see statistics.</p> 
         <div id="viz"></div> 
         
         <script>
 
         // set the dimensions and margins of the graph
-        const margin = {top: 20, right: 30, bottom: 80, left: 200},
-        width = 800 - margin.left - margin.right,
+        const margin = {top: 20, right: 30, bottom: 80, left: 100},
+        width = 1200 - margin.left - margin.right,
         height = 600 - margin.top - margin.bottom;
 
         // append the svg object to the body of the page
@@ -81,65 +82,134 @@
 
         // Parse the Data
         d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/dfb0f87cb8e0998cc679877a6e374e5d9f3eed65/world-total-cancer-deaths-by-type.csv").then( function(data) {
- // List of subgroups = header of the csv files = soil condition here
- const subgroups = data.columns.slice(1);
+            const tooltip = d3.select("#viz")
+                .append("div")
+                .style("opacity", 0)
+                .attr("class", "tooltip")
+                .style("background-color", "white")
+                .style("border", "solid")
+                .style("border-width", "2px")
+                .style("border-radius", "5px")
+                .style("padding", "5px")
 
-// List of groups = species here = value of the first column called group -> I show them on the X axis
-const groups = data.map(d => d.year);
+            // Three function that change the tooltip when user hover / move / leave a cell
+            const mouseover = function(d) {
+                tooltip
+                .style("opacity", 1)
+                d3.select(this)
+                .style("stroke", "black")
+                .style("opacity", 1)
+            }
+            const mousemove = function(d) {
+                tooltip
+                .html("value"+ d3.select(this).attr("percent") + "%" + "name" + d3.select(this).attr("name") + d3.select(this).attr("year"))
+                .style("left", (event.pageX) + "px")
+                .style("top", (event.pageY) + "px")
+            }
+            const mouseleave = function(d) {
+                tooltip
+                .style("opacity", 0)
+                d3.select(this)
+                .style("stroke", "none")
+                .style("opacity", 0.8)
+            }
+ 
+ 
+            // List of subgroups = header of the csv files = soil condition here
+            const subgroups = data.columns.slice(1);
+            
+            // List of groups = species here = value of the first column called group -> I show them on the X axis
+            const groups = data.map(d => d.Year);
 
-// Add X axis
-const x = d3.scaleBand()
-    .domain(groups)
-    .range([0, width])
-    .padding([0.2])
-svg.append("g")
-  .attr("transform", `translate(0, ${height})`)
-  .call(d3.axisBottom(x).tickSizeOuter(0));
+            const names = d3.map(data, function(d){return(d.group)}).keys()
 
-// Add Y axis
-const y = d3.scaleLinear()
-  .domain([0, 100])
-  .range([ height, 0 ]);
-svg.append("g")
-  .call(d3.axisLeft(y));
+            // Add X axis
+            const x = d3.scaleBand()
+                .domain(groups)
+                .range([0, width])
+                .padding([0.2])
+            svg.append("g")
+            .attr("transform", `translate(0, ${height})`)
+            .call(d3.axisBottom(x).tickSizeOuter(0));
 
-// color palette = one color per subgroup
-const color = d3.scaleOrdinal()
-  .domain(subgroups)
-  .range(['#e41a1c','#377eb8','#4daf4a'])
+            // Add Y axis
+            const y = d3.scaleLinear()
+            .domain([0, 100])
+            .range([ height, 0 ]);
+            svg.append("g")
+            .call(d3.axisLeft(y));
 
-// Normalize the data -> sum of each group must be 100!
-console.log(data)
-dataNormalized = []
-data.forEach(function(d){
-  // Compute the total
-  tot = 0
-  for (i in subgroups){ name=subgroups[i] ; tot += +d[name] }
-  // Now normalize
-  for (i in subgroups){ name=subgroups[i] ; d[name] = d[name] / tot * 100}
-})
+            // color palette = one color per subgroup
+            const color = d3.scaleOrdinal()
+            .domain(subgroups)
+            .range(d3.schemeSet2)
 
-//stack the data? --> stack per subgroup
-const stackedData = d3.stack()
-  .keys(subgroups)
-  (data)
+            // Normalize the data -> sum of each group must be 100!
+            console.log(data)
+            dataNormalized = []
+            data.forEach(function(d){
+            // Compute the total
+            tot = 0
+            for (i in subgroups){ name=subgroups[i] ; tot += +d[name] }
+            // Now normalize
+            for (i in subgroups){ name=subgroups[i] ; d[name] = d[name] / tot * 100}
+            })
 
-// Show the bars
-svg.append("g")
-  .selectAll("g")
-  // Enter in the stack data = loop key per key = group per group
-  .data(stackedData)
-  .join("g")
-    .attr("fill", d => color(d.key))
-    .selectAll("rect")
-    // enter a second time = loop subgroup per subgroup to add all rectangles
-    .data(d => d)
-    .join("rect")
-      .attr("x", d => x(d.data.group))
-      .attr("y", d => y(d[1]))
-      .attr("height", d => y(d[0]) - y(d[1]))
-      .attr("width",x.bandwidth())
-})
+            //stack the data? --> stack per subgroup
+            const stackedData = d3.stack()
+            .keys(subgroups)
+            (data)
+            console.log(stackedData)
+    
+
+            formatValue = d3.format(".4s");
+            // Show the bars
+            svg.append("g")
+            .selectAll("g")
+            // Enter in the stack data = loop key per key = group per group
+            .data(stackedData)
+            .join("g")
+                .attr("fill", d => color(d.key))
+                .selectAll("rect")
+                // enter a second time = loop subgroup per subgroup to add all rectangles
+                .enter()
+                .append()
+                .data(d => d)
+                .join("rect")
+                .attr("percent", function(d) { return (formatValue(d[1] - d[0]))})
+                .attr("year", function (d,i) { return d.data.Year})
+
+                .attr("x", d => x(d.data.Year))
+                .attr("y", d => y(d[1]))
+                .attr("height", d => y(d[0]) - y(d[1]))
+                .attr("width",x.bandwidth())
+                .on("mouseover", mouseover)
+                .on("mousemove", mousemove)
+                .on("mouseleave", mouseleave)
+
+
+            svg.selectAll("rect")
+                .attr("name", function (d,i) { return Object.keys(data[0])})
+                .attr("value", function (d) { return d[1]})
+
+                svg.append("text")
+                .attr("class", "x label")
+                .attr("text-anchor", "end")
+                .attr("x", (width-margin.top)/2)
+                .attr("y", height+50)
+                .text("Year");
+
+                svg.append("text")
+                .attr("class", "y label")
+                .attr("x", -350)
+                .attr("y", -50)
+                .attr("transform", "rotate(-90)")
+                .text("Percent of Total Cancer Deaths");
+
+
+
+            })
 
         </script>
         <div id=bottext><p style="margin:10px;padding:0">Next we will explore the prevalence of lung cancer. Please click the 'Lung Cancer' button at the top of the page to continue.</p></div> 
+    </body></html>
