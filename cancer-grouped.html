@@ -102,7 +102,7 @@
             }
             const mousemove = function(d) {
                 tooltip
-                .html("value"+ d3.select(this).attr("percent") + "%" + "name" + d3.select(this).attr("name") + d3.select(this).attr("year"))
+                .html("value"+ d3.select(this).attr("percent") + "%" + "name" + d3.select(this).attr("name") + d3.select(this).attr("year") + d3.select(this).attr("value"))
                 .style("left", (event.pageX) + "px")
                 .style("top", (event.pageY) + "px")
             }
@@ -178,7 +178,6 @@
                 .join("rect")
                 .attr("percent", function(d) { return (formatValue(d[1] - d[0]))})
                 .attr("year", function (d,i) { return d.data.Year})
-
                 .attr("x", d => x(d.data.Year))
                 .attr("y", d => y(d[1]))
                 .attr("height", d => y(d[0]) - y(d[1]))
@@ -190,7 +189,7 @@
 
             svg.selectAll("rect")
                 .attr("name", function (d,i) { return Object.keys(data[0])})
-                .attr("value", function (d) { return d[1]})
+                .attr("value", function (d) { return formatValue(d[1])})
 
                 svg.append("text")
                 .attr("class", "x label")
