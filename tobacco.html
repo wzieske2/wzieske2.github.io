@@ -91,7 +91,7 @@ var svg = d3.select("body")
               "translate(" + margin.left + "," + margin.top + ")");
 
 // Get the data
-d3.csv("data2a.csv", function(error, data) {
+d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/avg-sales-of-cigarettes-per-adult-per-day.csv", function(error, data) {
     data.forEach(function(d) {
         d.date = parseDate(d.date);
         d.close = +d.close;
