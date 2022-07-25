@@ -102,7 +102,7 @@
             }
             const mousemove = function(d) {
                 tooltip
-                .html("value"+ d3.select(this).attr("percent") + "%" + "name" + d3.select(this).attr("name") + d3.select(this).attr("year") + d3.select(this).attr("value"))
+                .html("In the year: "+ d3.select(this).attr("year")+" Type: " + d3.select(this).attr("name") + " accounted for "+ d3.select(this).attr("percent") + "% of all cancer deaths or "  +  d3.select(this).attr("value") + " deaths total")
                 .style("left", (event.pageX) + "px")
                 .style("top", (event.pageY) + "px")
             }
@@ -210,5 +210,5 @@
             })
 
         </script>
-        <div id=bottext><p style="margin:10px;padding:0">Next we will explore the prevalence of lung cancer. Please click the 'Lung Cancer' button at the top of the page to continue.</p></div> 
+        <div id=bottext><p style="margin:10px;padding:0">Next we will explore the trend of worldwide tabacco use. Please click the 'Tobacco' button at the top of the page to continue.</p></div> 
     </body></html>
