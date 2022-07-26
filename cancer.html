@@ -83,7 +83,7 @@ const svg = d3.select("#my_dataviz")
           `translate(${margin.left}, ${margin.top})`);
 
 //Read the data
-d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/cancer-death-rates-by-type-world.csv",
+d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/avg-sales-of-cigarettes-per-adult-per-day.csv",
   function(d){
     return { date : d3.timeParse("%Y")(d.Year), lung : d.lung }
   }).then(
@@ -94,7 +94,7 @@ d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/cance
 
     // Add X axis --> it is a date format
     const x = d3.scaleTime()
-      .domain(d3.extent(data, function(d) { return d.date; }))
+      .domain(d3.extent(data, function(d) { return d.Year; }))
       .range([ 0, width ]);
     xAxis = svg.append("g")
       .attr("transform", `translate(0, ${height})`)
