@@ -59,14 +59,19 @@
   <a href="summary.html">Summary</a>
 </div>
 <script>
-var parseDate = d3.time.format("%d-%b-%y").parse;
 
-var x = d3.time.scale().range([0, width]);
+
+const x = d3.scaleTime()
+      .domain(d3.extent(data, function(d) { return d.Year; }))
+      .range([ 0, width ]);
+
+      var xAxis = svg.append("g")
+      .attr("transform", `translate(0, ${height})`)
+      .call(d3.axisBottom(x));
+
 var y0 = d3.scale.linear().range([height, 0]);
 var y1 = d3.scale.linear().range([height, 0]);
 
-var xAxis = d3.svg.axis().scale(x)
-    .orient("bottom").ticks(5);
 
 var yAxisLeft = d3.svg.axis().scale(y0)
     .orient("left").ticks(5);
@@ -75,12 +80,12 @@ var yAxisRight = d3.svg.axis().scale(y1)
     .orient("right").ticks(5); 
 
 var valueline = d3.svg.line()
-    .x(function(d) { return x(d.date); })
-    .y(function(d) { return y0(d.close); });
+    .x(function(d) { return x(d.Year); })
+    .y(function(d) { return y0(d.deathrate); });
     
 var valueline2 = d3.svg.line()
-    .x(function(d) { return x(d.date); })
-    .y(function(d) { return y1(d.open); });
+    .x(function(d) { return x(d.Year); })
+    .y(function(d) { return y1(d.cigarettes); });
   
 var svg = d3.select("body")
     .append("svg")
@@ -92,18 +97,20 @@ var svg = d3.select("body")
 
 // Get the data
 d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/avg-sales-of-cigarettes-per-adult-per-day.csv", function(error, data) {
+    
+    console.log(data)
     data.forEach(function(d) {
-        d.date = parseDate(d.date);
-        d.close = +d.close;
-        d.open = +d.open;
+        d.year = d.Year;
+        d.deathrate = +d.deathrate;
+        d.cigarettes = +d.cigarettes;
     });
 
     // Scale the range of the data
-    x.domain(d3.extent(data, function(d) { return d.date; }));
+    x.domain(d3.extent(data, function(d) { return d.year; }));
     y0.domain([0, d3.max(data, function(d) {
-		return Math.max(d.close); })]); 
+		return Math.max(d.deathrate); })]); 
     y1.domain([0, d3.max(data, function(d) { 
-		return Math.max(d.open); })]);
+		return Math.max(d.cigarettes); })]);
 
     svg.append("path")        // Add the valueline path.
         .attr("d", valueline(data));
