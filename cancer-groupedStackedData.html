@@ -130,12 +130,7 @@
             .attr("transform", `translate(0, ${height})`)
             .call(d3.axisBottom(x).tickSizeOuter(0));
 
-            const nameBand = d3.scaleOrdinal()
-                .domain(subgroups)
-                .range();
-
-
-
+            // Add Y axis
             const y = d3.scaleLinear()
             .domain([0, 100])
             .range([ height, 0 ]);
@@ -149,8 +144,8 @@
 
             // Normalize the data -> sum of each group must be 100!
             console.log(data)
-            dN = []
-            dataOrig=data
+            dataNormalized = []
+            console.log(dataNormalized)
 
 
             data.forEach(function(d){
@@ -160,6 +155,7 @@
             // Now normalize
             for (i in subgroups){ name=subgroups[i] ; d[name] = d[name] / tot * 100}
             })
+
             console.log(data)
             //stack the data? --> stack per subgroup
             const stackedData = d3.stack()
@@ -171,11 +167,8 @@
             console.log(subgroups)
             console.log(stackedData)
             console.log(data)
-            console.log(dN)
-            console.log(color(stackedData.key))
 
             formatValue = d3.format(".4s");
-            
             // Show the bars
             svg.append("g")
             .selectAll("g")
@@ -191,25 +184,20 @@
                 .join("rect")
                 .attr("percent", function(d) { return (formatValue(d[1] - d[0]))})
                 .attr("year", function (d,i) { return d.data.Year})
-                .attr("name", function (d,i) { return subgroups[i] })
                 .attr("x", d => x(d.data.Year))
+                .attr("name", d=> subgroups[d.key])
                 .attr("y", d => y(d[1]))
                 .attr("height", d => y(d[0]) - y(d[1]))
                 .attr("width",x.bandwidth())
                 .on("mouseover", mouseover)
                 .on("mousemove", mousemove)
                 .on("mouseleave", mouseleave)
+                
 
 
-                function doName() {
-                if(j > i in subgroups)
-                    return;
-
-                var myData = subgroups[j];
-                j++;
-                update(myData);
-                }
-
+            svg.selectAll("rect")
+                .data(data)
+                .attr("value", function (d) { return 100000*formatValue(d)})
 
                 svg.append("text")
                 .attr("class", "x label")
@@ -225,14 +213,10 @@
                 .attr("transform", "rotate(-90)")
                 .text("Percent of Total Cancer Deaths");
 
-            //add names and values
-            d3.selectAll("rect").filter(function(d,i){d.year})
-            .data(data)
-                .attr("value", function (d) { return d.map(data.value*100000)})
-                .attr("name", function (d,i) { return subgroups[i] });
+
 
             })
 
         </script>
-        <div id=bottext style="margin:10px;padding:0"><p>Next we will explore the trend of worldwide tabacco use. Please click the 'Tobacco' button at the top of the page to continue.</p></div> 
+        <div id=bottext><p style="margin:10px;padding:0">Next we will explore the trend of worldwide tabacco use. Please click the 'Tobacco' button at the top of the page to continue.</p></div> 
     </body></html>
