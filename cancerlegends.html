@@ -57,18 +57,20 @@
 </div>
 
 <!-- Create a div where the graph will take place -->
-<div id="my_dataviz"></div>
-
+<div id="viz"></div>
+<div>
+  <svg id="legend" height=100 width=1200></svg>
+</div>
 
 <script>
 
 // set the dimensions and margins of the graph
-const margin = {top: 10, right: 30, bottom: 30, left: 60},
+const margin = {top: 10, right: 100, bottom: 35, left: 80},
     width = 1200 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
-const svg = d3.select("#my_dataviz")
+const svg = d3.select("#viz")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -226,45 +228,44 @@ d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/avg-s
             .x(function(d) { return x(d.date) })
             .y(function(d) { return y2(d.lung) })
             )
-        })
+        
+                 svg.append("text")
+                .attr("class", "x label")
+                .attr("text-anchor", "middle")
+                .attr("x", width/2)
+                .attr("y", height+35)
+                .text("Year");
+
+                svg.append("text")
+                .attr("class", "y label")
+                .attr("text-anchor", "middle")
+                .attr("x", -height/2)
+                .attr("y", -40)
+                .attr("transform", "rotate(-90)")
+                .text("Age Standardized Deathrate per 100k People");
 
 
-        ar SVG = d3.select("#my_dataviz3")
+                svg.append("text")
+                .attr("class", "y2 label")
+                .attr("text-anchor", "middle")
+                .attr("x", -height/2)
+                .attr("y", width+35)
+                .attr("transform", "rotate(-90)")
+                .text("Sales of cigarettes per adult per day (2017)");
 
-//Adding Legend
 
-var keys = ["Sales of cigarettes per adult per day (International Smoking Statistics (2017)) ", "Brigitte", "Eleonore", "Another friend", "Batman"]
-
-var color = d3.scaleOrdinal()
-  .domain(keys)
-  .range();
-
-// Add one dot in the legend for each name.
-var size = 20
-SVG.selectAll("mydots")
-  .data(keys)
-  .enter()
-  .append("rect")
-    .attr("x", 100)
-    .attr("y", function(d,i){ return 100 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
-    .attr("width", size)
-    .attr("height", size)
-    .style("fill", function(d){ return color(d)})
-
-// Add one dot in the legend for each name.
-SVG.selectAll("mylabels")
-  .data(keys)
-  .enter()
-  .append("text")
-    .attr("x", 100 + size*1.2)
-    .attr("y", function(d,i){ return 100 + i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
-    .style("fill", function(d){ return color(d)})
-    .text(function(d){ return d})
-    .attr("text-anchor", "left")
-    .style("alignment-baseline", "middle")
+         
+     })
     })
 
-
-
+    var legend = d3.select("#legend")
+    legend.append("circle").attr("cx",200).attr("cy",10).attr("r", 6).style("fill", "#FF552E")
+    legend.append("circle").attr("cx",700).attr("cy",10).attr("r", 6).style("fill", "#13294B")
+    legend.append("text").attr("x", 210).attr("y", 10).text("Age Standardized Deathrate per 100k People").style("font-size", "15px").attr("alignment-baseline","middle")
+    legend.append("text").attr("x", 710).attr("y", 10).text("Sales of cigarettes per adult per day (2017)").style("font-size", "15px").attr("alignment-baseline","middle")     
 
 </script>
+
+
+<div id=bottext style="margin:10px;padding:0"><p>Next we will explore the trend of worldwide tabacco use. Please click the 'Tobacco' button at the top of the page to continue.</p></div> 
+  </body></html>
