@@ -69,7 +69,7 @@
 
 
 <div id="viz">
-    <input type="range" name="mySlider" id=mySlider min="2" max="40" value="10">
+    <input type="range" name="mySlider" id=mySlider min="1990" max="2019" value="10">
 
 </div> 
 
@@ -89,7 +89,9 @@
         .attr("transform", `translate(${margin.left},${margin.top})`);
     
     //Data
-    d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/2019-world-annual-number-of-deaths-by-cause.csv")
+    d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/2019-world-annual-number-of-deaths-by-cause.csv",  function(d){
+    return { date : d3.timeParse("%Y")(d.Year), cigarettes : d.cigarettes, lung : d.lung }
+  }))
     .then(function(data) {
     
     data.sort(function(b, a) {
@@ -135,7 +137,7 @@
       .range(d3.schemeSet2)
 
     // Bars
-    svg.selectAll(".bar")
+    bars = svg.selectAll(".bar")
       .data(data)
       .enter()
       .append("rect")
@@ -173,6 +175,7 @@
       ;
           
     });
+
    //ANNOTATION
     const annotations = [
         {
