@@ -163,15 +163,14 @@
 
             formatValue = d3.format(".4s");
             
+
             // Show the bars
             svg.append("g")
             .selectAll("g")
-            // Enter in the stack data = loop key per key = group per group
             .data(stackedData)
             .join("g")
                 .attr("fill", d => color(d.key))
                 .selectAll("rect")
-                // enter a second time = loop subgroup per subgroup to add all rectangles
                 .data(d => d)
                 .enter()
                 .append("rect")
@@ -185,18 +184,18 @@
                 .on("mousemove", mousemove)
                 .on("mouseleave", mouseleave)
                 .data(stackedData)
-                .attr("name", (function(d,i){ return d.key}))
-
-/*
-            stackedData.forEach(function(d,i){
+                .attr("name",function(d){return d.key})
+                /*.each(
+                function(d){
+                for (const series of stackedData) {
               svg.append("g")
                 .selectAll("rect")
-                .data(stackedData[i])
-                .append("rect")
-                .attr("name", stackedData[i].key)
-                console.log(i + "" + stackedData[i].key) 
-            })
-            /*
+                .data(series)
+                .attr("name", series.key)
+                console.log(series.key) 
+        }})
+
+          /*
                 for (i in subgroups){ name=subgroups[i] ; d[name] = d[name] / tot * 100}
             })
             for (i in stackedData){ name=subgroups[i] ; d[name] = d[name] / tot * 100}

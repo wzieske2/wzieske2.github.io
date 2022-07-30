@@ -179,10 +179,11 @@
         .attr("font-family", "Arial")
         .attr("class", "bar")
         .attr("text-anchor", "middle")
-        .attr("x", d => x(d.value) + x(20000000/30))
+        .attr("x", d => x(d.value) + 22)
         .attr("y", d => y(d.cause)+10)
         .text(function(d) { return d.value;})
-      
+    
+    console.log(data.value)
     
     d3.select("svg")
           .append("g")
@@ -199,15 +200,15 @@
 
 
 
-// Function that changse year
+// Function that changes year
 function changeYear(year) {
   return data[d3.toString(year)]
 }
 
 d3.select("#mySlider").data(data).on("change", function(d){
   selectedValue = this.value
-  value = changeYear(toString(selectedValue))
-  makeBars();
+  //value = changeYear(toString(selectedValue))
+  //makeBars();
   console.log(selectedValue)
   
 })
