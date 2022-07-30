@@ -50,34 +50,36 @@
 <div id=nav class="nav">
   <a class="active"href="index.html">Causes of Death</a>
   <a href="cancer-grouped.html">Lung Cancer</a>
-  <a href="cancerlegends.html">Lung Cancer and Tobacco</a>
+  <a href="cancerlegends.html">Lung Cancer and Smoking</a>
 </div>
 <html><body>
 
 
 
   <div id=toptext >
-    <h1>Smoking and Lung Cancer</h1>
-    <p style="margin:10px;padding:0">Throughout this interactive slideshow we will explore the correlation between smoking and lung cancer deaths world-wide. </p> 
-    <p style="margin:10px;padding:0">The narrative will progress using navigation buttons at the top of window. Below is a reference of the buttons to stories in the narrative.</p>
+    <h1>Smoking and Lung Cancer Narrative Visualization</h1>
+    <p style="margin:10px;padding:0">Throughout the following interactive slideshow we will explore the correlation between smoking and lung cancer deaths world-wide. </p> 
+    <p style="margin:10px;padding:0">The narrative visualization will progress using navigation buttons at the top of window. Below is a reference of the buttons to scenes within the narrative.</p>
     <ul class="one">
       <li>Cause of Death: We will start by exploring all causes of death globally. </li>
-      <li>Lung Cancer: Second we will explore lung cancer specifically.</li>
-      <li>Tobacco Use: Next we will visualize world-wide tobacco use over time.</li>
-      <li>Summary: Finally we will summarize our findings of tobacco use plotted against lung cancer deaths.</li>
-    </ul></div>
+      <li>Lung Cancer: Second we will explore all cancer deaths and drill-down to lung cancer specifically.</li>
+      <li>Lung Cancer and Smoking: Next we will visualize world-wide cigarette smoking over time overlayed with annualized lung cancer deaths.</li>
+    </ul>
+    <p style="margin:10px;padding:0">In the chart below we can see Cancer, medically grouped as 'Neoplasms', is consistently the second leading cause of death globally from 1990-2019. The slider below can be used to select select data for years 1990-2019.</p> </p> 
+  </div>
+  
+  </div>
 
 
 <div id="viz">
-    <input type="range" name="mySlider" id=mySlider min="1990" max="2019" value="1990">
-
+  <input type="range" name="mySlider" id=mySlider min="1990" max="2019" value="1990">
 </div> 
 
 <script>
 
     // set the dimensions and margins of the graph
     const margin = {top: 20, right: 30, bottom: 80, left: 200},
-        width = 800 - margin.left - margin.right,
+        width = 1200 - margin.left - margin.right,
         height = 600 - margin.top - margin.bottom;
     
     // append the svg object to the body of the page
@@ -126,13 +128,13 @@
     svg.append("text")
     .attr("class", "x label")
     .attr("text-anchor", "end")
-    .attr("x", (width-margin.top)/2)
+    .attr("x", 550)
     .attr("y", height+75)
     .text("Deaths");
 
     svg.append("text")
     .attr("class", "y label")
-    .attr("x", -width/2)
+    .attr("x", -300)
     .attr("y", -150)
     .attr("transform", "rotate(-90)")
     .text("Causes of Death");
@@ -220,16 +222,19 @@ d3.select("#mySlider").data(data).on("change", function(d){
 
           type: d3.annotationCalloutRect,
           note: {
-            label: "Cancer was the second leading cause of death globally in 2019.",
+            label: "Cancer is consistently the second leading cause of death globally.",
             wrap: 180
           },          
-        
+          connector: {
+          end: "arrow"
+        },
           x: 125,
           y: 485,
           dy: -137,
           dx: 300,
           subject: { width : 450, height : 20 }
-        }].map(function(d){ d.color = "red"; return d})
+        }      
+      ].map(function(d){ d.color = "red"; return d})
 
         const makeAnnotations = d3.annotation()
           .type(d3.annotationLabel)
@@ -241,5 +246,6 @@ d3.select("#mySlider").data(data).on("change", function(d){
           .call(makeAnnotations)
 
 </script>
-<div id=bottext><p style="margin:10px;padding:0">Next we will explore the prevalence of lung cancer. Please click the 'Lung Cancer' button at the top of the page to continue.</p></div> 
+<div id=bottext>
+  <p style="margin:10px;padding:0">Next, we will explore the prevalence of lung cancer. Please click the 'Lung Cancer' button at the top of the page to continue.</p></div> 
 </body></html>

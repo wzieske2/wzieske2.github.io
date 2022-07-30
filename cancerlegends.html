@@ -45,26 +45,26 @@
 <div id=nav class="nav">
   <a href="index.html">Causes of Death</a>
   <a href="cancer-grouped.html">Lung Cancer</a>
-  <a class="active" href="cancerlegends.html">Lung Cancer and Tobacco</a>
+  <a class="active" href="cancerlegends.html">Lung Cancer and Smoking</a>
 </div>
 
 <div id=toptext >
-  <h1>Lung Cancer is the Leading Cause of Cancer Deaths Worldwide</h1>
-  <p style="margin:10px;padding:0">Double click to load data. Data can be brushed.</p> 
+  <h1>Lung Cancer is Correlated with Smoking</h1>
+  <pstyle="margin:10px;padding:0">Below we have plotted the number of global annualized lung cancer deaths against global average cigarrete consumption. From this we can see that smoking and lung cancer deaths are directly related.  </p>
 </div>
 
 <!-- Create a div where the graph will take place -->
 <div id="viz"></div>
 <div>
-  <svg id="legend" height=100 width=1200></svg>
+  <svg id="legend" height=50 width=1400></svg>
 </div>
 
 <script>
 
 // set the dimensions and margins of the graph
 const margin = {top: 10, right: 100, bottom: 35, left: 80},
-    width = 1200 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
+    width = 1400 - margin.left - margin.right,
+    height = 700 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 const svg = d3.select("#viz")
@@ -82,14 +82,15 @@ d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/avg-s
   }).then(
     function(data) {
 
-      // Add X axis --> it is a date format
       const x = d3.scaleTime()
-        .domain(d3.extent(data, function(d) { return d.Year; }))
+        .domain(d3.extent(data, function(d) { return +d.date; }))
         .range([ 0, width ]);
-      xAxis = svg.append("g")
+   
+        xAxis = svg.append("g")
         .attr("transform", `translate(0, ${height})`)
-        .call(d3.axisBottom(x))
-        .attr("stroke-width",'1px') ;
+        .attr("fill","none")
+        .attr("stroke-width",'1px')  
+        .call(d3.axisBottom(x));
 
       // Add Y axis
       const y = d3.scaleLinear()
@@ -112,7 +113,6 @@ d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/avg-s
         .attr("stroke-width",'1px')    
         .call(d3.axisLeft(y2));
 
-      // Add a clipPath: everything out of this area won't be drawn.
       const clip = svg.append("defs").append("svg:clipPath")
           .attr("id", "clip")
           .append("svg:rect")
@@ -172,11 +172,10 @@ d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/avg-s
 
       // A function that update the chart for given boundaries
       function updateChart(event,d) {
-
+        d3.selectAll(".annotation-group").transition(300).remove()
         // What are the selected boundaries?
         extent = event.selection
 
-        // If no selection, back to initial coordinate. Otherwise, update X axis domain
         if(!extent){
           if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
           x.domain([ 4,8])
@@ -187,7 +186,7 @@ d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/avg-s
         }
 
         // Update axis and line position
-        xAxis.transition().duration(1000).call(d3.axisBottom(x))
+        xAxis.transition().duration(500).call(d3.axisBottom(x))
         line
             .select('.line')
             .transition()
@@ -207,10 +206,16 @@ d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/avg-s
       }    
       
 
-      // If user double click, reinitialize the chart
       svg.on("dblclick",function(){
         x.domain(d3.extent(data, function(d) { return d.date; }))
-        xAxis.transition().call(d3.axisBottom(x))
+        xAxis.transition().duration(500).call(d3.axisBottom(x))
+       
+        d3.select("svg")
+          .append("g")
+          .attr("class", "annotation-group")
+          .call(makeAnnotations)
+      
+
         line
           .select('.line')
           .transition()
@@ -225,8 +230,10 @@ d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/avg-s
             .x(function(d) { return x(d.date) })
             .y(function(d) { return y2(d.lung) })
             )
-        
-                 svg.append("text")
+
+     })
+     
+     svg.append("text")
                 .attr("class", "x label")
                 .attr("text-anchor", "middle")
                 .attr("x", width/2)
@@ -248,21 +255,110 @@ d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/avg-s
                 .attr("x", -height/2)
                 .attr("y", width+35)
                 .attr("transform", "rotate(-90)")
-                .text("Sales of cigarettes per adult per day (2017)");
+                .text("Number of Cigarettes Sold per Adult per Day");
+            //ANNOTATIONS
+   const annotations = [
+   {
+        
+          note: {
+            title: "Annual Lung Cancer Deaths increase as Average Annual Smoking increases",
+            wrap: 0,
+            align: "left"
+          },
+          connector: {
+            end: "arrow" 
+          },
+          x: 500,
+          y: 100,
+          dy: 200,
+          dx: -300
+        },
+        {
+          
+          type: d3.annotationCalloutCircle,
+          note: {
+            title: "Annual Lung Cancer Deaths slows and inverts as Average Annual Smoking slows and inverts",
+            wrap: 190
+          },
+          subject: {
+            radius: 50
+          },
+          x: 765,
+          y: 60,
+          dy: 130,
+          dx: -0,
+          
+        },{
+        
+        note: {
+        },
+        connector: {
+          end: "arrow"
+        },
+        x: 1300,
+        y: 375,
+        dy: -150,
+        dx: -200
+        /*ny: 350,
+        nx: 1200,*/
 
+      },{
+        
+        note: {
+          title: "Annual Lung Cancer Deaths continues to decrease as Average Annual Smoking decreases",
+          wrap: 150,
+          align: "middle",
+          orientation: "leftRight"
+        },
 
-         
-     })
+        x: 975,
+        y: 275,
+        dy: 0,
+        dx: 0
+        /*ny: 350,
+        nx: 1200,*/
+
+      },{
+        type: d3.annotationCalloutRect,     
+        note: {
+          title: "Brush Chart to Zoom! Double Click to Reset!",
+          wrap: 0,
+          align: "right"
+        },
+
+        x: 625,
+        y: 600,
+        dy: 0,
+        dx: 0,
+        subject: { width : 25, height : -599 }
+      }
+      ].map(function(d){ d.color = "red"; return d})
+
+        const makeAnnotations = d3.annotation()
+          .type(d3.annotationLabel)
+          .annotations(annotations)
+
+        d3.select("svg")
+          .append("g")
+          .attr("class", "annotation-group")
+          .call(makeAnnotations)
+
     })
+
+
+
 
     var legend = d3.select("#legend")
     legend.append("circle").attr("cx",200).attr("cy",10).attr("r", 6).style("fill", "#FF552E")
     legend.append("circle").attr("cx",700).attr("cy",10).attr("r", 6).style("fill", "#13294B")
-    legend.append("text").attr("x", 210).attr("y", 10).text("Age Standardized Deathrate per 100k People").style("font-size", "15px").attr("alignment-baseline","middle")
-    legend.append("text").attr("x", 710).attr("y", 10).text("Sales of cigarettes per adult per day").style("font-size", "15px").attr("alignment-baseline","middle")     
+    legend.append("text").attr("x", 210).attr("y", 11).text("Age Standardized Deathrate per 100k People").style("font-size", "15px").attr("alignment-baseline","middle")
+    legend.append("text").attr("x", 710).attr("y", 11).text("Number of Cigarettes Sold per Adult per Day").style("font-size", "15px").attr("alignment-baseline","middle")     
 
 </script>
 
 
-<div id=bottext style="margin:10px;padding:0"><p>Next we will explore the trend of worldwide tabacco use. Please click the 'Tobacco' button at the top of the page to continue.</p></div> 
+<div id=bottext style="margin:10px;padding:0"><p>As we have demonstrated in the vizualization smoking is correlated with lung cancer. Lung cancer has the highest annual death rate among all cancer types. While cancer is consistently the second largest annual cause of death.</p>
+  <h1>Long story short: DON'T SMOKE!</h>
+
+</div> 
   </body></html>

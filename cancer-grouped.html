@@ -54,18 +54,19 @@
   <div id=nav class="nav">
     <a href="index.html">Causes of Death</a>
     <a class="active" href="cancer-grouped.html">Lung Cancer</a>
-    <a href="cancerlegends.html">Lung Cancer and Tobacco</a>
+    <a href="cancerlegends.html">Lung Cancer and Smoking</a>
   </div>
   <html><body>
     <div id=toptext >
         <h1>Lung Cancer is the Leading Cause of Cancer Deaths Worldwide</h1>
-        <p style="margin:10px;padding:0">Affordance: Hover over a bar in the stacked bar graph below to see statistics.</p> 
+        <p style="margin:10px;padding:0">Below we have a stacked percentage bar-chart of annual deaths from each type of cancer for the years 1990-2019.</p>
+        <p style="margin:10px;padding:0">By exploring the data, we can see that Lung cancer consistently accounts for the most annual cancer deaths.</p>
         <div id="viz"></div> 
         
         <script>
 
         // set the dimensions and margins of the graph
-        const margin = {top: 20, right: 30, bottom: 80, left: 100},
+        const margin = {top: 20, right: 30, bottom: 50, left: 100},
         width = 1200 - margin.left - margin.right,
         height = 600 - margin.top - margin.bottom;
 
@@ -78,7 +79,7 @@
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
         // Parse the Data
-        d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/dfb0f87cb8e0998cc679877a6e374e5d9f3eed65/world-total-cancer-deaths-by-type.csv").then( function(data) {
+        d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/world-total-cancer-deaths-by-type.csv").then( function(data) {
             const tooltip = d3.select("#viz")
                 .append("div")
                 .style("opacity", 0)
@@ -91,6 +92,7 @@
 
             // Three function that change the tooltip when user hover / move / leave a cell
             const mouseover = function(d) {
+              d3.selectAll(".annotation-group").transition(800).remove()
                 tooltip
                 .style("opacity", 1)
                 d3.select(this)
@@ -99,7 +101,7 @@
             }
             const mousemove = function(d) {
                 tooltip
-                .html("In the year: "+ d3.select(this).attr("year")+" Type: " + d3.select(this).attr("name") + " accounted for "+ d3.select(this).attr("percent") + "% of all cancer deaths or "  +  d3.select(this).attr("value") + " deaths total")
+                .html("In the year: "+ d3.select(this).attr("year")+" Cancer Type: " + d3.select(this).attr("name") + " accounted for "+ d3.select(this).attr("percent") + "% of all cancer deaths or "  +  d3.select(this).attr("value") + " deaths total")
                 .style("left", (event.pageX) + "px")
                 .style("top", (event.pageY) + "px")
             }
@@ -145,9 +147,6 @@
             .range(d3.schemeSet2)
 
             // Normalize the data -> sum of each group must be 100!
-            console.log(data)
-            dN = []
-            dataOrig=data
 
 
             data.forEach(function(d){
@@ -157,19 +156,19 @@
             // Now normalize
             for (i in subgroups){ name=subgroups[i] ; d[name] = d[name] / tot * 100}
             })
-            console.log(data)
-            //stack the data? --> stack per subgroup
+     
+            
+            
+            //stack the --> stack per subgroup
             const stackedData = d3.stack()
             .keys(subgroups)
             (data)
             
-            
-            
+          
+            console.log(data)
             console.log(subgroups)
             console.log(stackedData)
-            console.log(data)
-            console.log(dN)
-            console.log(color(stackedData.key))
+            console.log(stackedData[0].key)
 
             formatValue = d3.format(".4s");
             
@@ -182,13 +181,11 @@
                 .attr("fill", d => color(d.key))
                 .selectAll("rect")
                 // enter a second time = loop subgroup per subgroup to add all rectangles
-                .enter()
-                .append()
                 .data(d => d)
-                .join("rect")
+                .enter()
+                .append("rect")
                 .attr("percent", function(d) { return (formatValue(d[1] - d[0]))})
-                .attr("year", function (d,i) { return d.data.Year})
-                .attr("name", function (d,i) { return subgroups[i] })
+                .attr("year", function (d) { return d.data.Year})
                 .attr("x", d => x(d.data.Year))
                 .attr("y", d => y(d[1]))
                 .attr("height", d => y(d[0]) - y(d[1]))
@@ -196,8 +193,53 @@
                 .on("mouseover", mouseover)
                 .on("mousemove", mousemove)
                 .on("mouseleave", mouseleave)
+                .data(stackedData)
+                .attr("name", (function(d,i){ return d.key}))
 
+/*
+            stackedData.forEach(function(d,i){
+              svg.append("g")
+                .selectAll("rect")
+                .data(stackedData[i])
+                .append("rect")
+                .attr("name", stackedData[i].key)
+                console.log(i + "" + stackedData[i].key) 
+            })
+            /*
+                for (i in subgroups){ name=subgroups[i] ; d[name] = d[name] / tot * 100}
+            })
+            for (i in stackedData){ name=subgroups[i] ; d[name] = d[name] / tot * 100}
+              
+              svg.append("g")
+                .selectAll("rect")
+                .data(stackedData)
+                .enter()
+                .append("rect")
+                .attr("name", stackedData[i].key)
+              
+                console.log(i + "" + stackedData[i].key)
+            }
 
+            /*
+            foreach series in stackedData:
+    svg.append("g")
+        .selectAll("rect")
+        .data(series)
+        .enter()
+        .append("rect")
+        .attr(... set all the attributes ...)
+        .attr("name", series.key)*/
+/*
+          debugger;
+         stackedData.map(function(d,i){
+          svg.append("g")
+                      .selectAll("rect")
+                      .data(stackedData[i])
+                      .enter()
+                      .append("rect")
+                      .attr("name", d.key)
+          }) 
+*//*
                 function doName() {
                 if(j > i in subgroups)
                     return;
@@ -206,12 +248,12 @@
                 j++;
                 update(myData);
                 }
-
+*/
 
                 svg.append("text")
                 .attr("class", "x label")
                 .attr("text-anchor", "end")
-                .attr("x", (width-margin.top)/2)
+                .attr("x", 550)
                 .attr("y", height+50)
                 .text("Year");
 
@@ -222,14 +264,44 @@
                 .attr("transform", "rotate(-90)")
                 .text("Percent of Total Cancer Deaths");
 
-            //add names and values
+        /*    //add names and values
             d3.selectAll("rect").filter(function(d,i){d.year})
             .data(data)
                 .attr("value", function (d) { return d.map(data.value*100000)})
                 .attr("name", function (d,i) { return subgroups[i] });
-
+                */
             })
 
+        //ANNOTATION
+        const annotations = [
+              {
+
+
+                type: d3.annotationCalloutRect,
+                note: {
+                  title: "Lung Cancer accounts for the most annual cancer deaths. Hover over data entries to drill-down for details!",
+                  wrap: 180
+                },          
+                connector: {
+              },
+                x: 214,
+                y: 393,
+                dy: -100,
+                dx: 20,
+                subject: { width : 27, height : 103 }
+              }      
+            ].map(function(d){ d.color = "red"; return d})
+
+              const makeAnnotations = d3.annotation()
+                .type(d3.annotationLabel)
+                .annotations(annotations)
+
+              d3.select("svg")
+                .append("g")
+                .attr("class", "annotation-group")
+                .call(makeAnnotations)
+
+
         </script>
-        <div id=bottext style="margin:10px;padding:0"><p>Next we will explore the trend of worldwide tabacco use. Please click the 'Tobacco' button at the top of the page to continue.</p></div> 
+        <div id=bottext style="margin:10px;padding:0"><p>Finally, we will explore the correlation between smoking and lung cancer. Please click the 'Lung Cancer and Smoking' button at the top of the page to continue.</p></div> 
     </body></html>
