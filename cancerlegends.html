@@ -166,23 +166,20 @@ d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/avg-s
           .call(brush);
           
 
-      // A function that set idleTimeOut to null
       let idleTimeout
       function idled() { idleTimeout = null; }
 
-      // A function that update the chart for given boundaries
       function updateChart(event,d) {
         d3.selectAll(".annotation-group").transition(300).remove()
-        // What are the selected boundaries?
         extent = event.selection
 
         if(!extent){
-          if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+          if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); 
           x.domain([ 4,8])
         }else{
           x.domain([ x.invert(extent[0]), x.invert(extent[1]) ])
           line.select(".brush").call(brush.move, null)
-          line2.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
+          line2.select(".brush").call(brush.move, null) 
         }
 
         // Update axis and line position
@@ -246,7 +243,7 @@ d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/avg-s
                 .attr("x", -height/2)
                 .attr("y", -40)
                 .attr("transform", "rotate(-90)")
-                .text("Age Standardized Deathrate per 100k People");
+                .text("Age Standardized Lung Cancer Deaths per 100k People");
 
 
                 svg.append("text")
@@ -349,10 +346,10 @@ d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/avg-s
 
 
     var legend = d3.select("#legend")
-    legend.append("circle").attr("cx",200).attr("cy",10).attr("r", 6).style("fill", "#FF552E")
-    legend.append("circle").attr("cx",700).attr("cy",10).attr("r", 6).style("fill", "#13294B")
-    legend.append("text").attr("x", 210).attr("y", 11).text("Age Standardized Deathrate per 100k People").style("font-size", "15px").attr("alignment-baseline","middle")
-    legend.append("text").attr("x", 710).attr("y", 11).text("Number of Cigarettes Sold per Adult per Day").style("font-size", "15px").attr("alignment-baseline","middle")     
+    legend.append("circle").attr("cx",250).attr("cy",10).attr("r", 6).style("fill", "#FF552E")
+    legend.append("circle").attr("cx",750).attr("cy",10).attr("r", 6).style("fill", "#13294B")
+    legend.append("text").attr("x", 260).attr("y", 11).text("Age Standardized Lung Cancer Deaths per 100k People").style("font-size", "15px").attr("alignment-baseline","middle")
+    legend.append("text").attr("x", 760).attr("y", 11).text("Number of Cigarettes Sold per Adult per Day").style("font-size", "15px").attr("alignment-baseline","middle")     
 
 </script>
 

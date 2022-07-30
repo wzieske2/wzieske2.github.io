@@ -65,12 +65,10 @@
         
         <script>
 
-        // set the dimensions and margins of the graph
         const margin = {top: 20, right: 30, bottom: 50, left: 100},
         width = 1200 - margin.left - margin.right,
         height = 600 - margin.top - margin.bottom;
 
-        // append the svg object to the body of the page
         const svg = d3.select("#viz")
         .append("svg")
             .attr("width", width + margin.left + margin.right)
@@ -78,7 +76,6 @@
         .append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
-        // Parse the Data
         d3.csv("https://raw.githubusercontent.com/wzieske2/wzieske2.github.io/main/world-total-cancer-deaths-by-type.csv").then( function(data) {
             const tooltip = d3.select("#viz")
                 .append("div")
@@ -90,7 +87,6 @@
                 .style("border-radius", "5px")
                 .style("padding", "5px")
 
-            // Three function that change the tooltip when user hover / move / leave a cell
             const mouseover = function(d) {
               d3.selectAll(".annotation-group").transition(800).remove()
                 tooltip
@@ -114,13 +110,10 @@
             }
  
  
-            // List of subgroups = header of the csv files = soil condition here
             const subgroups = data.columns.slice(1);
             
-            // List of groups = species here = value of the first column called group -> I show them on the X axis
             const groups = data.map(d => d.Year);
             
-            // Add X axis
             const x = d3.scaleBand()
                 .domain(groups)
                 .range([0, width])
@@ -141,16 +134,14 @@
             svg.append("g")
             .call(d3.axisLeft(y));
 
-            // color palette = one color per subgroup
             const color = d3.scaleOrdinal()
             .domain(subgroups)
             .range(d3.schemeSet2)
 
-            // Normalize the data -> sum of each group must be 100!
 
 
             data.forEach(function(d){
-            // Compute the total
+        
             tot = 0
             for (i in subgroups){ name=subgroups[i] ; tot += +d[name] }
             // Now normalize
@@ -159,7 +150,7 @@
      
             
             
-            //stack the --> stack per subgroup
+          
             const stackedData = d3.stack()
             .keys(subgroups)
             (data)

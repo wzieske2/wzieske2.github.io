@@ -57,7 +57,7 @@
 
 
   <div id=toptext >
-    <h1>Smoking and Lung Cancer Narrative Visualization</h1>
+    <h1>WARNING: Don't Smoke!</h1>
     <p style="margin:10px;padding:0">Throughout the following interactive slideshow we will explore the correlation between smoking and lung cancer deaths world-wide. </p> 
     <p style="margin:10px;padding:0">The narrative visualization will progress using navigation buttons at the top of window. Below is a reference of the buttons to scenes within the narrative.</p>
     <ul class="one">
@@ -77,12 +77,10 @@
 
 <script>
 
-    // set the dimensions and margins of the graph
     const margin = {top: 20, right: 30, bottom: 80, left: 200},
         width = 1200 - margin.left - margin.right,
         height = 600 - margin.top - margin.bottom;
     
-    // append the svg object to the body of the page
     const svg = d3.select("#viz")
       .append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -113,7 +111,6 @@
 
     formatValue = d3.format(".3s");
 
-    // Add X axis
     const x = d3.scaleLinear()
       .domain([0, 20000000])
       .range([0,width]);
@@ -151,7 +148,6 @@
   }
 
   
-    // Bars
     function makeBars(year) {
    
     console.log((data[year]))
@@ -165,7 +161,6 @@
         .attr("y", d => y(d.cause))
         .attr("height", y.bandwidth())
         .attr("fill", function(d,i){return color(i) })
-        // no bar at the beginning
         .attr("width", d => x(0))
         .attr("x", d => x(0));
 
@@ -187,11 +182,16 @@
         .attr("x", d => x(d.value) + x(20000000/30))
         .attr("y", d => y(d.cause)+10)
         .text(function(d) { return d.value;})
+      
+    
+    d3.select("svg")
+          .append("g")
+          .attr("class", "annotation-group")
+          .call(makeAnnotations)
+
     }
     makeBars(date);
     
-   
-    // Animation
 
 
           
@@ -204,7 +204,6 @@ function changeYear(year) {
   return data[d3.toString(year)]
 }
 
-// Listen to the slider?
 d3.select("#mySlider").data(data).on("change", function(d){
   selectedValue = this.value
   value = changeYear(toString(selectedValue))
@@ -239,11 +238,6 @@ d3.select("#mySlider").data(data).on("change", function(d){
         const makeAnnotations = d3.annotation()
           .type(d3.annotationLabel)
           .annotations(annotations)
-
-        d3.select("svg")
-          .append("g")
-          .attr("class", "annotation-group")
-          .call(makeAnnotations)
 
 </script>
 <div id=bottext>
